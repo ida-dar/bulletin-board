@@ -1,4 +1,30 @@
 @import '../../../styles/settings.scss';
 
-// .root {
-// }
+.root {
+  padding: ($base-size * 2) 0;
+
+  .postsContainer {
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 385px;
+    display: inline-block;
+    margin: 24px 12px;
+
+    .author {
+      margin: 12px 0;
+
+      > * {
+        font-size: 0.8rem;
+      }
+    }
+
+    .text {
+      margin: 12px 0;
+    }
+  }
+}
+

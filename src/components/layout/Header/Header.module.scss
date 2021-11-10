@@ -2,3 +2,15 @@
 
 // .root {
 // }
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 25px;
+
+  > *, .profile > *{
+    color: $color-light;
+    text-transform: uppercase;
+  }
+
+}

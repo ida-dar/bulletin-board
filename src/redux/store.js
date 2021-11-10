@@ -4,10 +4,12 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { initialState } from './initialState';
 import { reducer as postsReducer } from './postsRedux';
+import { reducer as usersReducer } from './usersRedux';
 
 // define reducers
 const reducers = {
   posts: postsReducer,
+  user: usersReducer,
 };
 
 // add blank reducers for initial state properties without reducers

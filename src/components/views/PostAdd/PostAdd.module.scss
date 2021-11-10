@@ -2,3 +2,25 @@
 
 // .root {
 // }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 600px;
+  margin: 0 auto;
+
+  > * {
+    margin: 12px 0;
+  }
+
+  .input {
+    display: none;
+  }
+
+  .submit {
+    width: 100px;
+    margin: 48px auto;
+  }
+}
