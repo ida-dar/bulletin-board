@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll } from '../../../redux/postsRedux.js';
+import { fetchPostById, getOne } from '../../../redux/postsRedux.js';
 import { getAllUsers, getUserStatus } from '../../../redux/usersRedux.js';
 
 import styles from './Post.module.scss';
@@ -22,7 +22,11 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
 
-const Component = ({className, user, children}) => {
+const Component = ({className, user, post, fetchOnePost}) => {
+
+  React.useEffect(() => {
+    fetchOnePost();
+  }, [fetchOnePost]);
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -30,29 +34,15 @@ const Component = ({className, user, children}) => {
     setExpanded(!expanded);
   };
 
-  const mockData = {
-    id: 1,
-    author:'the.admin@example.com',
-    created: '2019-01-01',
-    updated: '2019-01-01',
-    status: 'published',
-    title: 'Welcome to our bulletin board!',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Error molestias omnis officiis illo repellendus consequuntur eligendi accusamus tempore ex maxime voluptatibus dolorum inventore officia eius iusto optio quisquam.',
-    photo: 'https://images.pexels.com/photos/128299/pexels-photo-128299.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    price: null,
-    phone: null,
-    location: null,
-  };
-
   return(
     <div className={clsx(className, styles.root)}>
       <h2>Post</h2>
       <Card className={clsx(className, styles.card)}>
-        {mockData.photo &&
+        {post.photo &&
           <CardMedia
             component="img"
             height="250"
-            image={mockData.photo}
+            image={post.photo}
             alt="post-image"
           />
         }
@@ -60,31 +50,31 @@ const Component = ({className, user, children}) => {
           <List>
             <ListItem>
               <Typography gutterBottom variant="h5" component="div">
-                {mockData.title}
+                {post.title}
               </Typography>
             </ListItem>
           </List>
           <Divider />
           <div className={clsx(className, styles.author)}>
             <Typography>
-              Author: {mockData.author}
+              Author: {post.author}
             </Typography>
             <Typography>
-              Created: {mockData.created}
+              Created: {post.created}
             </Typography>
-            {(mockData.updated !== mockData.created) &&
+            {(post.updated !== post.created) &&
               <Typography>
-                Updated: {mockData.updated}
+                Updated: {post.updated}
               </Typography>
             }
             <Typography>
-              {mockData.price}
+              {post.price && `Price: ${post.price}`}
             </Typography>
             <Typography>
-              {mockData.phone}
+              {post.phone && `Phone: ${post.phone}`}
             </Typography>
             <Typography>
-              {mockData.location}
+              {post.location && `Location: ${post.location}`}
             </Typography>
           </div>
         </CardContent>
@@ -107,40 +97,38 @@ const Component = ({className, user, children}) => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph className={clsx(className, styles.text)}>
-              {mockData.text}
+              {post.text}
             </Typography>
           </CardContent>
         </Collapse>
-
-        {
-          user.logged === true &&
+        {user.logged === true &&
           <CardActions>
-            <Button size="small" color="primary" component={Link} href="post/:id/edit">
+            <Button size="small" color="primary" component={Link} href={`/post/${post._id}/edit`}>
               Edit
             </Button>
           </CardActions>
         }
-
       </Card>
-      {children}
     </div>
   );
 };
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
   user: PropTypes.object,
   userStatus: PropTypes.func,
+  fetchOnePost: PropTypes.func,
+  post: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  allPosts: getAll(state),
+  post: getOne(state),
   user: getAllUsers(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, props) => ({
   userStatus: status => dispatch(getUserStatus(status)),
+  fetchOnePost: () => dispatch(fetchPostById(props.match.params.id)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
